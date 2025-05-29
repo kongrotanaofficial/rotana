@@ -781,3 +781,13 @@ body {
     background: white;
     box-shadow: 0 8px 25px rgba(67, 97, 238, 0.2);
 }
+
+/* Add to style.css */
+.card .bot-profile {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
