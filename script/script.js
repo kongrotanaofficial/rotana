@@ -172,7 +172,7 @@ const qrDownloadBtn = document.getElementById('qr-download-btn');
 let qrCodeInstance = null;
 
 if (qrGenerateBtn && qrInput && qrOutput && qrDownloadBtn) {
-    const generateQRCode = () => {
+    qrGenerateBtn.addEventListener('click', () => {
         const text = qrInput.value.trim();
         if (text) {
             // Clear previous QR code
@@ -192,27 +192,12 @@ if (qrGenerateBtn && qrInput && qrOutput && qrDownloadBtn) {
                 if (qrCanvas) {
                     qrDownloadBtn.href = qrCanvas.toDataURL('image/png');
                     qrDownloadBtn.classList.remove('hidden');
-                    qrGenerateBtn.classList.add('bg-gray-300', 'cursor-not-allowed');
-                    qrGenerateBtn.disabled = true;
-                    setTimeout(() => {
-                        qrGenerateBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
-                        qrGenerateBtn.disabled = false;
-                    }, 1000); // Re-enable after 1s to prevent rapid clicks
                 }
             }, 100);
         } else {
-            qrOutput.innerHTML = '<p class="text-red-600 text-center">Please enter a valid URL or text.</p>';
+            qrOutput.innerHTML = '<p class="text-red-600">Please enter a valid URL or text.</p>';
             qrDownloadBtn.classList.add('hidden');
-            setTimeout(() => {
-                qrOutput.innerHTML = '';
-            }, 3000);
         }
-    };
-
-    qrGenerateBtn.addEventListener('click', generateQRCode);
-    qrGenerateBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Prevent default touch behavior
-        generateQRCode();
     });
 }
 
@@ -223,7 +208,7 @@ const barcodeGenerateBtn = document.getElementById('barcode-generate-btn');
 const barcodeDownloadBtn = document.getElementById('barcode-download-btn');
 
 if (barcodeGenerateBtn && barcodeInput && barcodeOutput && barcodeDownloadBtn) {
-    const generateBarcode = () => {
+    barcodeGenerateBtn.addEventListener('click', () => {
         const text = barcodeInput.value.trim();
         if (text) {
             // Generate barcode
@@ -240,28 +225,16 @@ if (barcodeGenerateBtn && barcodeInput && barcodeOutput && barcodeDownloadBtn) {
             setTimeout(() => {
                 barcodeDownloadBtn.href = barcodeOutput.toDataURL('image/png');
                 barcodeDownloadBtn.classList.remove('hidden');
-                barcodeGenerateBtn.classList.add('bg-gray-300', 'cursor-not-allowed');
-                barcodeGenerateBtn.disabled = true;
-                setTimeout(() => {
-                    barcodeGenerateBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
-                    barcodeGenerateBtn.disabled = false;
-                }, 1000); // Re-enable after 1s
             }, 100);
         } else {
             barcodeOutput.getContext('2d').clearRect(0, 0, barcodeOutput.width, barcodeOutput.height);
-            barcodeOutput.insertAdjacentHTML('afterend', '<p class="text-red-600 text-center">Please enter valid text for barcode.</p>');
+            barcodeOutput.insertAdjacentHTML('afterend', '<p class="text-red-600">Please enter valid text for barcode.</p>');
             barcodeDownloadBtn.classList.add('hidden');
             setTimeout(() => {
                 const errorMsg = barcodeOutput.nextElementSibling;
                 if (errorMsg && errorMsg.tagName === 'P') errorMsg.remove();
             }, 3000);
         }
-    };
-
-    barcodeGenerateBtn.addEventListener('click', generateBarcode);
-    barcodeGenerateBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Prevent default touch behavior
-        generateBarcode();
     });
 }
 
