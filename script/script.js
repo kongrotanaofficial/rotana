@@ -161,3 +161,112 @@ if (generateBioButton) {
         toggleContentVisibility('gemini-bio-snippet', this);
     });
 }
+
+
+// QR Code Generator
+const qrInput = document.getElementById('qr-input');
+const qrOutput = document.getElementById('qr-output');
+const qrGenerateBtn = document.getElementById('qr-generate-btn');
+const qrDownloadBtn = document.getElementById('qr-download-btn');
+
+let qrCodeInstance = null;
+
+if (qrGenerateBtn && qrInput && qrOutput && qrDownloadBtn) {
+    const generateQRCode = () => {
+        const text = qrInput.value.trim();
+        if (text) {
+            // Clear previous QR code
+            qrOutput.innerHTML = '';
+            // Generate new QR code
+            qrCodeInstance = new QRCode(qrOutput, {
+                text: text,
+                width: 200,
+                height: 200,
+                colorDark: "#1e1e2c",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            // Show download button after generation
+            setTimeout(() => {
+                const qrCanvas = qrOutput.querySelector('canvas');
+                if (qrCanvas) {
+                    qrDownloadBtn.href = qrCanvas.toDataURL('image/png');
+                    qrDownloadBtn.classList.remove('hidden');
+                    qrGenerateBtn.classList.add('bg-gray-300', 'cursor-not-allowed');
+                    qrGenerateBtn.disabled = true;
+                    setTimeout(() => {
+                        qrGenerateBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+                        qrGenerateBtn.disabled = false;
+                    }, 1000); // Re-enable after 1s to prevent rapid clicks
+                }
+            }, 100);
+        } else {
+            qrOutput.innerHTML = '<p class="text-red-600 text-center">Please enter a valid URL or text.</p>';
+            qrDownloadBtn.classList.add('hidden');
+            setTimeout(() => {
+                qrOutput.innerHTML = '';
+            }, 3000);
+        }
+    };
+
+    qrGenerateBtn.addEventListener('click', generateQRCode);
+    qrGenerateBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Prevent default touch behavior
+        generateQRCode();
+    });
+}
+
+// Barcode Generator
+const barcodeInput = document.getElementById('barcode-input');
+const barcodeOutput = document.getElementById('barcode-output');
+const barcodeGenerateBtn = document.getElementById('barcode-generate-btn');
+const barcodeDownloadBtn = document.getElementById('barcode-download-btn');
+
+if (barcodeGenerateBtn && barcodeInput && barcodeOutput && barcodeDownloadBtn) {
+    const generateBarcode = () => {
+        const text = barcodeInput.value.trim();
+        if (text) {
+            // Generate barcode
+            JsBarcode(barcodeOutput, text, {
+                format: "CODE128",
+                width: 2,
+                height: 100,
+                displayValue: true,
+                background: "#ffffff",
+                lineColor: "#1e1e2c",
+                margin: 10
+            });
+            // Show download button
+            setTimeout(() => {
+                barcodeDownloadBtn.href = barcodeOutput.toDataURL('image/png');
+                barcodeDownloadBtn.classList.remove('hidden');
+                barcodeGenerateBtn.classList.add('bg-gray-300', 'cursor-not-allowed');
+                barcodeGenerateBtn.disabled = true;
+                setTimeout(() => {
+                    barcodeGenerateBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+                    barcodeGenerateBtn.disabled = false;
+                }, 1000); // Re-enable after 1s
+            }, 100);
+        } else {
+            barcodeOutput.getContext('2d').clearRect(0, 0, barcodeOutput.width, barcodeOutput.height);
+            barcodeOutput.insertAdjacentHTML('afterend', '<p class="text-red-600 text-center">Please enter valid text for barcode.</p>');
+            barcodeDownloadBtn.classList.add('hidden');
+            setTimeout(() => {
+                const errorMsg = barcodeOutput.nextElementSibling;
+                if (errorMsg && errorMsg.tagName === 'P') errorMsg.remove();
+            }, 3000);
+        }
+    };
+
+    barcodeGenerateBtn.addEventListener('click', generateBarcode);
+    barcodeGenerateBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Prevent default touch behavior
+        generateBarcode();
+    });
+}
+
+// Apply fade-in animation to code generator section
+const codeGeneratorSection = document.getElementById('code-generator');
+if (codeGeneratorSection) {
+    observer.observe(codeGeneratorSection);
+}

@@ -188,6 +188,33 @@
     </div>
 </section>
 
+<section id="code-generator" class="py-16 fade-in">
+    <div class="container mx-auto px-4">
+        <h2 class="section-title">QR Code & Barcode Generator</h2>
+        <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+            Generate QR codes and barcodes instantly. Enter a URL or text below to create your code, then download it as an image.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <!-- QR Code Generator -->
+            <div class="card p-6">
+                <h3 class="text-xl font-semibold mb-4 text-center">QR Code</h3>
+                <input type="text" id="qr-input" class="form-input mb-4" placeholder="Enter URL or text for QR code">
+                <div id="qr-output" class="flex justify-center mb-4"></div>
+                <button id="qr-generate-btn" class="btn btn-primary w-full mb-2">Generate QR Code</button>
+                <a id="qr-download-btn" class="btn btn-secondary w-full hidden" download="qrcode.png">Download QR Code</a>
+            </div>
+            <!-- Barcode Generator -->
+            <div class="card p-6">
+                <h3 class="text-xl font-semibold mb-4 text-center">Barcode</h3>
+                <input type="text" id="barcode-input" class="form-input mb-4" placeholder="Enter text for barcode">
+                <canvas id="barcode-output" class="mx-auto mb-4"></canvas>
+                <button id="barcode-generate-btn" class="btn btn-primary w-full mb-2">Generate Barcode</button>
+                <a id="barcode-download-btn" class="btn btn-secondary w-full hidden" download="barcode.png">Download Barcode</a>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section id="telegram-bots" class="py-20 bg-light fade-in hero-pattern">
     <div class="container mx-auto px-4">
         <h2 class="section-title">Telegram Bots</h2>
@@ -637,4 +664,6 @@
     </footer>
 </body>
 <script src="./script/script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
 </html>

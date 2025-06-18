@@ -806,3 +806,60 @@ body {
 .collaborator-profile-img:hover {
     transform: scale(1.05);
 }
+
+/* Ensure buttons are touch-friendly */
+#code-generator .btn {
+    min-width: 100%;
+    min-height: 48px; /* Minimum touch target size */
+    padding: 12px 20px;
+    font-size: 1rem;
+    line-height: 1.5;
+    touch-action: manipulation; /* Improve touch responsiveness */
+}
+
+/* Adjust button layout for mobile */
+@media (max-width: 640px) {
+    #code-generator .btn {
+        width: 100%;
+        max-width: 100%; /* Override any max-width constraints */
+        padding: 14px 16px; /* Slightly larger padding for better touch */
+        font-size: 0.95rem; /* Slightly smaller font for mobile */
+    }
+
+    #code-generator .card {
+        padding: 1rem; /* Reduce padding for smaller screens */
+    }
+
+    #code-generator .grid {
+        grid-template-columns: 1fr; /* Stack cards vertically on mobile */
+        gap: 1.5rem;
+    }
+
+    #code-generator .form-input {
+        padding: 10px 14px; /* Adjust input padding for mobile */
+        font-size: 0.9rem;
+    }
+}
+
+/* Replace hover effects with active states for touch devices */
+#code-generator .btn:active {
+    transform: scale(0.98); /* Subtle press effect */
+    box-shadow: 0 5px 15px rgba(67, 97, 238, 0.2); /* Reduced shadow on press */
+}
+
+#code-generator .btn-primary:active {
+    background: linear-gradient(135deg, var(--secondary), var(--primary)); /* Reverse gradient on press */
+}
+
+#code-generator .btn-secondary:active {
+    background: var(--primary);
+    color: white;
+    border-color: transparent;
+}
+
+/* Ensure download buttons are visible and styled consistently */
+#code-generator .btn:not(.hidden) {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
