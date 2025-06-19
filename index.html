@@ -190,11 +190,11 @@
 
 <section id="code-generator" class="py-16 fade-in">
     <div class="container mx-auto px-4">
-        <h2 class="section-title">QR Code & Barcode Generator</h2>
+        <h2 class="section-title">Code & Password Generator</h2>
         <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-            Generate QR codes and barcodes instantly. Enter a URL or text below to create your code, then download it as an image.
+            Generate QR codes, barcodes, or strong passwords instantly. Enter your input below to create your code or password, then download or copy it.
         </p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <!-- QR Code Generator -->
             <div class="card p-6">
                 <h3 class="text-xl font-semibold mb-4 text-center">QR Code</h3>
@@ -211,10 +211,42 @@
                 <button id="barcode-generate-btn" class="btn btn-primary w-full mb-2">Generate Barcode</button>
                 <a id="barcode-download-btn" class="btn btn-secondary w-full hidden" download="barcode.png">Download Barcode</a>
             </div>
+            <!-- Password Generator -->
+            <div class="card p-6">
+                <h3 class="text-xl font-semibold mb-4 text-center">Password Generator</h3>
+                <div class="password-display-container mb-4 relative">
+                    <span id="password-display" class="form-input w-full text-center truncate">Click Generate...</span>
+                    <button id="copy-btn" class="btn btn-primary absolute right-2 top-1/2 transform -translate-y-1/2 p-2 border-copy-btn" title="Copy to Clipboard">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2m-2 0v2h6V4h-6zm-2 6h8v6H8v-6z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div id="copy-toast" class="hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-lg text-white text-sm font-medium shadow-lg transition-opacity duration-300"></div>
+                <div class="options mb-4">
+                    <div class="option flex justify-between items-center mb-2">
+                        <label for="length" class="text-sm font-medium">Password Length</label>
+                        <span id="length-value" class="text-sm font-semibold">16</span>
+                    </div>
+                    <input type="range" id="length" min="8" max="50" value="16" class="slider w-full mb-4">
+                    <div class="option flex items-center mb-2">
+                        <input type="checkbox" id="include-uppercase" class="mr-2" checked>
+                        <label for="include-uppercase" class="text-sm">Include Uppercase (A-Z)</label>
+                    </div>
+                    <div class="option flex items-center mb-2">
+                        <input type="checkbox" id="include-numbers" class="mr-2" checked>
+                        <label for="include-numbers" class="text-sm">Include Numbers (0-9)</label>
+                    </div>
+                    <div class="option flex items-center mb-2">
+                        <input type="checkbox" id="include-symbols" class="mr-2" checked>
+                        <label for="include-symbols" class="text-sm">Include Symbols (!@#)</label>
+                    </div>
+                </div>
+                <button id="generate-password-btn" class="btn btn-primary w-full">Generate Password</button>
+            </div>
         </div>
     </div>
 </section>
-
 <section id="telegram-bots" class="py-20 bg-light fade-in hero-pattern">
     <div class="container mx-auto px-4">
         <h2 class="section-title">Telegram Bots</h2>

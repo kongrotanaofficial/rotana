@@ -162,7 +162,6 @@ if (generateBioButton) {
     });
 }
 
-
 // QR Code Generator
 const qrInput = document.getElementById('qr-input');
 const qrOutput = document.getElementById('qr-output');
@@ -172,12 +171,10 @@ const qrDownloadBtn = document.getElementById('qr-download-btn');
 let qrCodeInstance = null;
 
 if (qrGenerateBtn && qrInput && qrOutput && qrDownloadBtn) {
-    qrGenerateBtn.addEventListener('click', () => {
+    const generateQRCode = () => {
         const text = qrInput.value.trim();
         if (text) {
-            // Clear previous QR code
             qrOutput.innerHTML = '';
-            // Generate new QR code
             qrCodeInstance = new QRCode(qrOutput, {
                 text: text,
                 width: 200,
@@ -186,18 +183,32 @@ if (qrGenerateBtn && qrInput && qrOutput && qrDownloadBtn) {
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
-            // Show download button after generation
             setTimeout(() => {
                 const qrCanvas = qrOutput.querySelector('canvas');
                 if (qrCanvas) {
                     qrDownloadBtn.href = qrCanvas.toDataURL('image/png');
                     qrDownloadBtn.classList.remove('hidden');
+                    qrGenerateBtn.classList.add('bg-gray-300', 'cursor-not-allowed');
+                    qrGenerateBtn.disabled = true;
+                    setTimeout(() => {
+                        qrGenerateBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+                        qrGenerateBtn.disabled = false;
+                    }, 1000);
                 }
             }, 100);
         } else {
-            qrOutput.innerHTML = '<p class="text-red-600">Please enter a valid URL or text.</p>';
+            qrOutput.innerHTML = '<p class="text-red-600 text-center">Please enter a valid URL or text.</p>';
             qrDownloadBtn.classList.add('hidden');
+            setTimeout(() => {
+                qrOutput.innerHTML = '';
+            }, 3000);
         }
+    };
+
+    qrGenerateBtn.addEventListener('click', generateQRCode);
+    qrGenerateBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        generateQRCode();
     });
 }
 
@@ -208,10 +219,9 @@ const barcodeGenerateBtn = document.getElementById('barcode-generate-btn');
 const barcodeDownloadBtn = document.getElementById('barcode-download-btn');
 
 if (barcodeGenerateBtn && barcodeInput && barcodeOutput && barcodeDownloadBtn) {
-    barcodeGenerateBtn.addEventListener('click', () => {
+    const generateBarcode = () => {
         const text = barcodeInput.value.trim();
         if (text) {
-            // Generate barcode
             JsBarcode(barcodeOutput, text, {
                 format: "CODE128",
                 width: 2,
@@ -221,21 +231,161 @@ if (barcodeGenerateBtn && barcodeInput && barcodeOutput && barcodeDownloadBtn) {
                 lineColor: "#1e1e2c",
                 margin: 10
             });
-            // Show download button
             setTimeout(() => {
                 barcodeDownloadBtn.href = barcodeOutput.toDataURL('image/png');
                 barcodeDownloadBtn.classList.remove('hidden');
+                barcodeGenerateBtn.classList.add('bg-gray-300', 'cursor-not-allowed');
+                barcodeGenerateBtn.disabled = true;
+                setTimeout(() => {
+                    barcodeGenerateBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+                    barcodeGenerateBtn.disabled = false;
+                }, 1000);
             }, 100);
         } else {
             barcodeOutput.getContext('2d').clearRect(0, 0, barcodeOutput.width, barcodeOutput.height);
-            barcodeOutput.insertAdjacentHTML('afterend', '<p class="text-red-600">Please enter valid text for barcode.</p>');
+            barcodeOutput.insertAdjacentHTML('afterend', '<p class="text-red-600 text-center">Please enter valid text for barcode.</p>');
             barcodeDownloadBtn.classList.add('hidden');
             setTimeout(() => {
                 const errorMsg = barcodeOutput.nextElementSibling;
                 if (errorMsg && errorMsg.tagName === 'P') errorMsg.remove();
             }, 3000);
         }
+    };
+
+    barcodeGenerateBtn.addEventListener('click', generateBarcode);
+    barcodeGenerateBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        generateBarcode();
     });
+}
+
+// Password Generator
+const lengthSlider = document.getElementById('length');
+const lengthValue = document.getElementById('length-value');
+const passwordDisplay = document.getElementById('password-display');
+const generatePasswordBtn = document.getElementById('generate-password-btn');
+const copyBtn = document.getElementById('copy-btn');
+const copyToast = document.getElementById('copy-toast');
+const includeUppercase = document.getElementById('include-uppercase');
+const includeNumbers = document.getElementById('include-numbers');
+const includeSymbols = document.getElementById('include-symbols');
+
+const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const numberChars = '0123456789';
+const symbolChars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+if (lengthSlider && lengthValue && passwordDisplay && generatePasswordBtn && copyBtn && copyToast && includeUppercase && includeNumbers && includeSymbols) {
+    // Update length display
+    lengthSlider.addEventListener('input', () => {
+        lengthValue.textContent = lengthSlider.value;
+    });
+
+    // Show toast message
+    const showToast = (message, isError = false) => {
+        copyToast.textContent = message;
+        copyToast.classList.add('show');
+        if (isError) {
+            copyToast.classList.add('error');
+        } else {
+            copyToast.classList.remove('error');
+        }
+        setTimeout(() => {
+            copyToast.classList.remove('show');
+        }, 2000);
+    };
+
+    // Generate password
+    const generatePassword = () => {
+        const length = parseInt(lengthSlider.value);
+        let charset = lowercaseChars;
+        let password = '';
+
+        if (includeUppercase.checked) charset += uppercaseChars;
+        if (includeNumbers.checked) charset += numberChars;
+        if (includeSymbols.checked) charset += symbolChars;
+
+        if (charset.length === 0) {
+            passwordDisplay.textContent = 'Select at least one option!';
+            showToast('Select at least one option!', true);
+            return;
+        }
+
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * charset.length);
+            password += charset[randomIndex];
+        }
+
+        passwordDisplay.textContent = password;
+        generatePasswordBtn.classList.add('bg-gray-300', 'cursor-not-allowed');
+        generatePasswordBtn.disabled = true;
+        setTimeout(() => {
+            generatePasswordBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+            generatePasswordBtn.disabled = false;
+        }, 1000);
+    };
+
+    // Copy to clipboard with fallback
+    const copyPassword = () => {
+        const password = passwordDisplay.textContent;
+        if (password === 'Click Generate...' || password === 'Select at least one option!') {
+            showToast('Nothing to copy!', true);
+            return;
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(password).then(() => {
+                copyBtn.querySelector('svg').setAttribute('stroke', '#22c55e');
+                showToast('Password copied to clipboard!');
+                setTimeout(() => {
+                    copyBtn.querySelector('svg').setAttribute('stroke', 'currentColor');
+                }, 2000);
+            }).catch(err => {
+                console.error('Clipboard API failed:', err);
+                fallbackCopy(password);
+            });
+        } else {
+            fallbackCopy(password);
+        }
+    };
+
+    // Fallback copy method
+    const fallbackCopy = (text) => {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            copyBtn.querySelector('svg').setAttribute('stroke', '#22c55e');
+            showToast('Password copied to clipboard!');
+            setTimeout(() => {
+                copyBtn.querySelector('svg').setAttribute('stroke', 'currentColor');
+            }, 2000);
+        } catch (err) {
+            console.error('Fallback copy failed:', err);
+            showToast('Failed to copy password!', true);
+        } finally {
+            document.body.removeChild(textarea);
+        }
+    };
+
+    // Event listeners
+    generatePasswordBtn.addEventListener('click', generatePassword);
+    generatePasswordBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        generatePassword();
+    });
+    copyBtn.addEventListener('click', copyPassword);
+    copyBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        copyPassword();
+    });
+
+    // Initial generation
+    generatePassword();
 }
 
 // Apply fade-in animation to code generator section
